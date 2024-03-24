@@ -1,0 +1,218 @@
+%General Mission Analysis Tool(GMAT) Script
+%Created: 2023-04-05 17:05:25
+
+
+%----------------------------------------
+%---------- Spacecraft
+%----------------------------------------
+
+Create Spacecraft DefaultSC;
+GMAT DefaultSC.DateFormat = UTCGregorian;
+GMAT DefaultSC.Epoch = '01 Jan 2023 00:00:00.000';
+GMAT DefaultSC.CoordinateSystem = EarthMJ2000Eq;
+GMAT DefaultSC.DisplayStateType = Cartesian;
+GMAT DefaultSC.X = -6806.08433;
+GMAT DefaultSC.Y = -1294.71942;
+GMAT DefaultSC.Z = 0;
+GMAT DefaultSC.VX = -0.18729;
+GMAT DefaultSC.VY = 0.984545;
+GMAT DefaultSC.VZ = 7.518588;
+GMAT DefaultSC.DryMass = 1000;
+GMAT DefaultSC.Cd = 2.2;
+GMAT DefaultSC.Cr = 1.3;
+GMAT DefaultSC.DragArea = 10;
+GMAT DefaultSC.SRPArea = 10;
+GMAT DefaultSC.SPADDragScaleFactor = 1;
+GMAT DefaultSC.SPADSRPScaleFactor = 1;
+GMAT DefaultSC.NAIFId = -10001001;
+GMAT DefaultSC.NAIFIdReferenceFrame = -9001001;
+GMAT DefaultSC.OrbitColor = Red;
+GMAT DefaultSC.TargetColor = Teal;
+GMAT DefaultSC.OrbitErrorCovariance = [ 1e+70 0 0 0 0 0 ; 0 1e+70 0 0 0 0 ; 0 0 1e+70 0 0 0 ; 0 0 0 1e+70 0 0 ; 0 0 0 0 1e+70 0 ; 0 0 0 0 0 1e+70 ];
+GMAT DefaultSC.CdSigma = 1e+70;
+GMAT DefaultSC.CrSigma = 1e+70;
+GMAT DefaultSC.Id = 'SatId';
+GMAT DefaultSC.Attitude = CoordinateSystemFixed;
+GMAT DefaultSC.SPADSRPInterpolationMethod = Bilinear;
+GMAT DefaultSC.SPADSRPScaleFactorSigma = 1e+70;
+GMAT DefaultSC.SPADDragInterpolationMethod = Bilinear;
+GMAT DefaultSC.SPADDragScaleFactorSigma = 1e+70;
+GMAT DefaultSC.ModelFile = 'aura.3ds';
+GMAT DefaultSC.ModelOffsetX = 0;
+GMAT DefaultSC.ModelOffsetY = 0;
+GMAT DefaultSC.ModelOffsetZ = 0;
+GMAT DefaultSC.ModelRotationX = 0;
+GMAT DefaultSC.ModelRotationY = 0;
+GMAT DefaultSC.ModelRotationZ = 0;
+GMAT DefaultSC.ModelScale = 1;
+GMAT DefaultSC.AttitudeDisplayStateType = 'Quaternion';
+GMAT DefaultSC.AttitudeRateDisplayStateType = 'AngularVelocity';
+GMAT DefaultSC.AttitudeCoordinateSystem = EarthMJ2000Eq;
+GMAT DefaultSC.EulerAngleSequence = '321';
+
+
+
+
+
+
+
+
+%----------------------------------------
+%---------- ForceModels
+%----------------------------------------
+
+Create ForceModel PointMasses_ForceModel;
+GMAT PointMasses_ForceModel.CentralBody = Earth;
+GMAT PointMasses_ForceModel.PrimaryBodies = {Earth};
+GMAT PointMasses_ForceModel.PointMasses = {Luna, Sun};
+GMAT PointMasses_ForceModel.Drag = None;
+GMAT PointMasses_ForceModel.SRP = Off;
+GMAT PointMasses_ForceModel.RelativisticCorrection = Off;
+GMAT PointMasses_ForceModel.ErrorControl = RSSStep;
+GMAT PointMasses_ForceModel.GravityField.Earth.Degree = 2;
+GMAT PointMasses_ForceModel.GravityField.Earth.Order = 2;
+GMAT PointMasses_ForceModel.GravityField.Earth.StmLimit = 100;
+GMAT PointMasses_ForceModel.GravityField.Earth.PotentialFile = 'EGM96.cof';
+GMAT PointMasses_ForceModel.GravityField.Earth.TideModel = 'None';
+
+%----------------------------------------
+%---------- Propagators
+%----------------------------------------
+
+Create Propagator PointMasses;
+GMAT PointMasses.FM = PointMasses_ForceModel;
+GMAT PointMasses.Type = RungeKutta89;
+GMAT PointMasses.InitialStepSize = 60;
+GMAT PointMasses.Accuracy = 9.999999999999999e-12;
+GMAT PointMasses.MinStep = 0.001;
+GMAT PointMasses.MaxStep = 2700;
+GMAT PointMasses.MaxStepAttempts = 50;
+GMAT PointMasses.StopIfAccuracyIsViolated = true;
+
+%----------------------------------------
+%---------- Coordinate Systems
+%----------------------------------------
+
+Create CoordinateSystem ITRF;
+GMAT ITRF.Origin = Earth;
+GMAT ITRF.Axes = Equator;
+
+%----------------------------------------
+%---------- EventLocators
+%----------------------------------------
+
+Create EclipseLocator EclipseLocator1;
+GMAT EclipseLocator1.Spacecraft = DefaultSC;
+GMAT EclipseLocator1.Filename = 'EclipseLocator1.txt';
+GMAT EclipseLocator1.OccultingBodies = {Earth, Luna};
+GMAT EclipseLocator1.InputEpochFormat = 'TAIModJulian';
+GMAT EclipseLocator1.InitialEpoch = '21545';
+GMAT EclipseLocator1.StepSize = 10;
+GMAT EclipseLocator1.FinalEpoch = '21545.138';
+GMAT EclipseLocator1.UseLightTimeDelay = true;
+GMAT EclipseLocator1.UseStellarAberration = true;
+GMAT EclipseLocator1.WriteReport = true;
+GMAT EclipseLocator1.RunMode = Automatic;
+GMAT EclipseLocator1.UseEntireInterval = true;
+GMAT EclipseLocator1.EclipseTypes = {'Umbra', 'Penumbra', 'Antumbra'};
+
+%----------------------------------------
+%---------- Subscribers
+%----------------------------------------
+
+Create OrbitView DefaultOrbitView;
+GMAT DefaultOrbitView.SolverIterations = Current;
+GMAT DefaultOrbitView.UpperLeft = [ 0 0 ];
+GMAT DefaultOrbitView.Size = [ 0.6367904396073411 0.4500574052812859 ];
+GMAT DefaultOrbitView.RelativeZOrder = 124;
+GMAT DefaultOrbitView.Maximized = false;
+GMAT DefaultOrbitView.Add = {DefaultSC, Earth};
+GMAT DefaultOrbitView.CoordinateSystem = EarthMJ2000Eq;
+GMAT DefaultOrbitView.DrawObject = [ true true ];
+GMAT DefaultOrbitView.DataCollectFrequency = 1;
+GMAT DefaultOrbitView.UpdatePlotFrequency = 50;
+GMAT DefaultOrbitView.NumPointsToRedraw = 0;
+GMAT DefaultOrbitView.ShowPlot = true;
+GMAT DefaultOrbitView.MaxPlotPoints = 20000;
+GMAT DefaultOrbitView.ShowLabels = true;
+GMAT DefaultOrbitView.ViewPointReference = Earth;
+GMAT DefaultOrbitView.ViewPointVector = [ 30000 0 0 ];
+GMAT DefaultOrbitView.ViewDirection = Earth;
+GMAT DefaultOrbitView.ViewScaleFactor = 1;
+GMAT DefaultOrbitView.ViewUpCoordinateSystem = EarthMJ2000Eq;
+GMAT DefaultOrbitView.ViewUpAxis = Z;
+GMAT DefaultOrbitView.EclipticPlane = Off;
+GMAT DefaultOrbitView.XYPlane = On;
+GMAT DefaultOrbitView.WireFrame = Off;
+GMAT DefaultOrbitView.Axes = On;
+GMAT DefaultOrbitView.Grid = Off;
+GMAT DefaultOrbitView.SunLine = Off;
+GMAT DefaultOrbitView.UseInitialView = On;
+GMAT DefaultOrbitView.StarCount = 7000;
+GMAT DefaultOrbitView.EnableStars = On;
+GMAT DefaultOrbitView.EnableConstellations = On;
+
+Create GroundTrackPlot DefaultGroundTrackPlot;
+GMAT DefaultGroundTrackPlot.SolverIterations = Current;
+GMAT DefaultGroundTrackPlot.UpperLeft = [ 0.001280409731113956 0.4489092996555683 ];
+GMAT DefaultGroundTrackPlot.Size = [ 0.6350832266325224 0.4500574052812859 ];
+GMAT DefaultGroundTrackPlot.RelativeZOrder = 16;
+GMAT DefaultGroundTrackPlot.Maximized = false;
+GMAT DefaultGroundTrackPlot.Add = {DefaultSC};
+GMAT DefaultGroundTrackPlot.DataCollectFrequency = 1;
+GMAT DefaultGroundTrackPlot.UpdatePlotFrequency = 50;
+GMAT DefaultGroundTrackPlot.NumPointsToRedraw = 0;
+GMAT DefaultGroundTrackPlot.ShowPlot = true;
+GMAT DefaultGroundTrackPlot.MaxPlotPoints = 20000;
+GMAT DefaultGroundTrackPlot.CentralBody = Earth;
+GMAT DefaultGroundTrackPlot.TextureMap = 'ModifiedBlueMarble.jpg';
+
+Create EphemerisFile EphemerisFile1;
+GMAT EphemerisFile1.UpperLeft = [ 0 0 ];
+GMAT EphemerisFile1.Size = [ 0.5957178841309824 0.7887485648679678 ];
+GMAT EphemerisFile1.RelativeZOrder = 19;
+GMAT EphemerisFile1.Maximized = false;
+GMAT EphemerisFile1.Spacecraft = DefaultSC;
+GMAT EphemerisFile1.Filename = 'C:\Users\Griffin\OneDrive\GaTech\Griffin Orbital Lib\validation\ephem\sso_twoBodySHGrav.e';
+GMAT EphemerisFile1.FileFormat = STK-TimePosVel;
+GMAT EphemerisFile1.EpochFormat = UTCModJulian;
+GMAT EphemerisFile1.InitialEpoch = InitialSpacecraftEpoch;
+GMAT EphemerisFile1.FinalEpoch = FinalSpacecraftEpoch;
+GMAT EphemerisFile1.StepSize = 5;
+GMAT EphemerisFile1.Interpolator = Lagrange;
+GMAT EphemerisFile1.InterpolationOrder = 7;
+GMAT EphemerisFile1.CoordinateSystem = EarthMJ2000Eq;
+GMAT EphemerisFile1.OutputFormat = LittleEndian;
+GMAT EphemerisFile1.IncludeCovariance = None;
+GMAT EphemerisFile1.WriteEphemeris = true;
+GMAT EphemerisFile1.DistanceUnit = Kilometers;
+GMAT EphemerisFile1.IncludeEventBoundaries = true;
+
+Create EphemerisFile EphemerisFile2;
+GMAT EphemerisFile2.UpperLeft = [ 0 0 ];
+GMAT EphemerisFile2.Size = [ 0 0 ];
+GMAT EphemerisFile2.RelativeZOrder = 0;
+GMAT EphemerisFile2.Maximized = false;
+GMAT EphemerisFile2.Spacecraft = DefaultSC;
+GMAT EphemerisFile2.Filename = 'C:\Users\Griffin\OneDrive\GaTech\Griffin Orbital Lib\validation\ephem\sso_twoBodySHGrav_ecef.e';
+GMAT EphemerisFile2.FileFormat = STK-TimePosVel;
+GMAT EphemerisFile2.EpochFormat = UTCGregorian;
+GMAT EphemerisFile2.InitialEpoch = InitialSpacecraftEpoch;
+GMAT EphemerisFile2.FinalEpoch = FinalSpacecraftEpoch;
+GMAT EphemerisFile2.StepSize = 5;
+GMAT EphemerisFile2.Interpolator = Lagrange;
+GMAT EphemerisFile2.InterpolationOrder = 7;
+GMAT EphemerisFile2.CoordinateSystem = EarthFixed;
+GMAT EphemerisFile2.OutputFormat = LittleEndian;
+GMAT EphemerisFile2.IncludeCovariance = None;
+GMAT EphemerisFile2.WriteEphemeris = true;
+GMAT EphemerisFile2.DistanceUnit = Kilometers;
+GMAT EphemerisFile2.IncludeEventBoundaries = true;
+
+
+%----------------------------------------
+%---------- Mission Sequence
+%----------------------------------------
+
+BeginMissionSequence;
+Propagate PointMasses(DefaultSC) {DefaultSC.ElapsedSecs = 86400};
