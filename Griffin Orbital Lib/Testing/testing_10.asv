@@ -1,0 +1,11 @@
+clc; clear;
+jd = 2458934.03705529;
+mjd = jd - 2400000.5;
+
+jdmax = 58127.5 + 2400000.5;
+
+(jdmax - jd)
+
+[~, ~, ~, ~, ~, ~, epoch] = jd2greg(jd);
+disp(epoch) 
+fprintf('GMAT MJD: %.6f\n', mjd)
