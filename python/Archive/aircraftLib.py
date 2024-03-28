@@ -1,5 +1,5 @@
 import numpy as np
-from rotationLib import euler_to_dcm, skew_sym
+from python.mathematics import euler_to_dcm, skew_sym
 
 
 def eom(_, y, f_b, m_b, m, I):
