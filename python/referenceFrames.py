@@ -89,7 +89,7 @@ def ecef_to_enu(r_ecef: np.array, lat_gs: float, lon_gs: float, alt_gs: float) -
 # @param 
 def enu_to_azel(r_enu: np.array) -> tuple[float, float]: # TODO: check type hints on np array
     l = np.sqrt(r_enu[0]**2 + r_enu[1]**2)
-    el = np.arctan2(r_enu[3], l)
-    az = 0  # TODO: put in actual computation here
+    el = np.arctan2(r_enu[2], l)
+    az = np.arctan2(r_enu[0], r_enu[1])
 
     return az, el
