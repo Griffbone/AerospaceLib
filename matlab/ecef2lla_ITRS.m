@@ -7,8 +7,8 @@
 %	r	:	ITRF position vector (m) 
 %
 % Outputs
-%	lat	:	latitude (deg) 
-%	lon	:	longitude (deg)
+%	lat	:	latitude (rad) 
+%	lon	:	longitude (rad)
 %	alt	:	geodetic altitude (m)
 
 function [lat, lon, alt] = ECEF2LLA_ITRS(r)

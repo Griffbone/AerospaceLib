@@ -1,7 +1,6 @@
 % Function to propagate a TLE between given Julian dates using two-body
 % motion. Kepler propagator (KPP) option is a little messed up - needs some
-% work to match TLEs better over longer periods. CURRENTLY USING GEOCENTRIC
-% LONGITUDE/LATITUDE/ALTITUDE [ECEF2LLA_gc()]
+% work to match TLEs better over longer periods.
 %
 % Author: Griffin Jourda 9/28/22
 % 
@@ -68,7 +67,7 @@ function [t, y_eci, y_ecef, lat, lon] = propTLE(l1, l2, jd1, jd2, method)
 	for n = 1:size(y_out, 1) 
 		gha = jd2gmst(jd1 + t(n)/86400);
 		r_ecef = (R3(gha)*y_out(n, 1:3)')';
-		[lat, lon, ~] = ECEF2LLA(r_ecef, 'gc');
+		[lat, lon, ~] = ecef2lla_ITRS(r_ecef);
 	
 		y_ecef = [y_ecef; r_ecef];
 		lats = [lats, lat];
