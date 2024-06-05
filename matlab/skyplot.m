@@ -12,9 +12,9 @@
 function [] = skyplot(az, el)
 	figure
 
-	idx = find(diff(az) == max(diff(az)));
-	az(idx) = nan; 
-	el(idx) = nan; 
+	% idx = find(diff(az) == max(diff(az)));
+	% az(idx) = nan; 
+	% el(idx) = nan; 
 
 	polarscatter(deg2rad(az), el, 'r', 'filled')
 

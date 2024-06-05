@@ -11,9 +11,9 @@
 %		el		:	elevation to satellite (deg) 
 
 function [az, el] = ENU2azel(r_enu) 
-	psi = atan2d(r_enu(2), r_enu(1)); 
-	az = 90 - psi;
-	el = asind(r_enu(3)/norm(r_enu)); 
-
-	az = mod(az, 360); 
+    psi = atan2(r_enu(2), r_enu(1));
+    az = pi/2 - psi;
+    el = asin(r_enu(3)/norm(r_enu));
+    
+	az = mod(az, 2*pi); 
 end
