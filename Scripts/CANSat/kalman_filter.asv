@@ -1,0 +1,28 @@
+Q = 
+
+% Predict 
+w_meas = w_true + bias_true + randn(3, 1)*w_noise;
+Phi = I + F(w_meas - bias_post)*dt; 
+x_prior = Phi*x_post;
+P_prior = Phi*P_post*Phi' + Q;
+
+% Update
+H = observation_matrix();
+K = 
+
+%% Kalman filter functions 
+function [H] = observation_matrix()
+	I3 = eye(3);
+	z3 = zeros(3);
+	H = [I3, z3, z3; 
+		I3, z3, z3];
+end
+
+function [F] = dynamics_matrix(w)
+	Omega = -skewSym(w);
+	z3 = zeros(3);
+
+	F = [Omega, z3, z3;
+		z3, Omega, z3;
+		z3, z3, z3];
+end
