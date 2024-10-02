@@ -9,7 +9,6 @@
 %	Ouputs
 %		E		:	eccentric anomaly (rad)
 %		ta		:	true anomaly (rad)
-
 function [E, ta] = keplerE(M, e)
 	if M < pi
 		E = M + e/2; 

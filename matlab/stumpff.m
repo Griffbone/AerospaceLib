@@ -1,14 +1,12 @@
-% Function to evaluate the Stumpff functions
+% Function to evaluate the stumpff functions for universal variable z
 % 
 % Author: Griffin Jourda 10/12/22
 % 
-%	Inputs
-%		z	:	z value
-% 
-%	Outputs 
-%		c	:	c value 
-%		s	:	s value
-
+% Inputs
+%	z	:	universal variable z
+% Outputs 
+%	c	:	c value 
+%	s	:	s value
 function [c, s] = stumpff(z)
 	if z < 0 
 		c = (1 - cosh(sqrt(-z)))/z; 

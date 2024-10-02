@@ -31,6 +31,5 @@ function [lat, lon, alt] = ECEF2LLA_ITRS(r)
 	end
 	
 	alt = rd/cos(lat) - C;
-	lat = rad2deg(lat);
-	lon = atan2d(r(2), r(1)); 
+	lon = atan2(r(2), r(1)); 
 end
